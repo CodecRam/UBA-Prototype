@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>UBA — Zone Maps</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="../assets/style.css"/></head>
+<body class="font-sans min-h-screen flex flex-col">
+  <header class="h-16 bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50">
+    <div class="max-w-[1440px] mx-auto px-6 h-full flex items-center justify-between gap-6">
+      <div class="flex items-center gap-3 shrink-0"><div class="w-9 h-9 bg-cyan-700 rounded-lg flex items-center justify-center shadow"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></div><span class="text-lg font-bold text-slate-900 tracking-tight">UBA</span></div>
+      <div class="flex items-center gap-2.5 px-3 shrink-0"><div class="w-9 h-9 rounded-full bg-amber-600 flex items-center justify-center text-white text-sm font-bold">TK</div><div class="hidden md:block"><p class="text-sm font-semibold text-slate-900">Tyler Kim</p><p class="text-xs text-slate-500">Asset Coordinator</p></div><a href="../index.html" class="ml-2 text-xs text-rose-600 font-bold hover:underline">Sign Out</a></div>
+    </div>
+  </header>
+  <div class="flex flex-1">
+    <aside class="w-60 shrink-0 bg-slate-900 min-h-[calc(100vh-4rem)] flex flex-col">
+      <nav class="flex-1 px-3 py-4 space-y-1">
+        <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white">🏠 Asset Hub</a>
+        <a href="deliveries.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white">🚛 Deliveries</a>
+        <a href="inventory.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white">📦 Inventory</a>
+        <a href="maps.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium bg-blue-600 text-white shadow-lg">🗺️ Zone Maps</a>
+      </nav>
+      <div class="px-3 pb-4"><div class="border-t border-slate-800 pt-3"><p class="text-xs text-slate-600 text-center">UBA Ops v1.0</p></div></div>
+    </aside>
+    <main class="flex-1 bg-slate-50 p-8 overflow-y-auto">
+      <div class="max-w-6xl mx-auto space-y-8">
+        <div><h1 class="text-3xl font-bold text-slate-900">Zone Maps & Utilisation</h1><p class="text-slate-500 mt-1">Site layout, operative heat map, and asset positioning</p></div>
+
+        <!-- Layer toggles -->
+        <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-5 flex flex-wrap gap-3 items-center">
+          <span class="text-sm font-bold text-slate-700">Map Layers:</span>
+          <button onclick="toggleLayer('heat',this)" class="px-3 py-1.5 rounded-lg text-xs font-bold transition bg-blue-600 text-white">Operative Heat Map</button>
+          <button onclick="toggleLayer('assets',this)" class="px-3 py-1.5 rounded-lg text-xs font-bold transition bg-blue-600 text-white">Asset Positions</button>
+          <button onclick="toggleLayer('routes',this)" class="px-3 py-1.5 rounded-lg text-xs font-bold transition bg-slate-100 text-slate-600 hover:bg-slate-200">Delivery Routes</button>
+          <button onclick="toggleLayer('geo',this)" class="px-3 py-1.5 rounded-lg text-xs font-bold transition bg-blue-600 text-white">Geofence Zones</button>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          <!-- Site map -->
+          <div class="xl:col-span-2 bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100">
+              <h2 class="font-bold text-slate-900">UBA Tower Complex — Site Plan</h2>
+            </div>
+            <div class="p-6">
+              <!-- SVG site plan heat map -->
+              <svg width="100%" viewBox="0 0 520 360" xmlns="http://www.w3.org/2000/svg" class="rounded-xl bg-slate-100" style="min-height:300px">
+                <!-- Site boundary -->
+                <rect x="10" y="10" width="500" height="340" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+                <!-- Zone A -->
+                <rect x="30" y="30" width="140" height="120" rx="6" fill="rgba(16,185,129,0.2)" stroke="#10b981" stroke-width="1.5"/>
+                <text x="100" y="85" text-anchor="middle" fill="#065f46" font-size="13" font-weight="bold">Zone A</text>
+                <text x="100" y="100" text-anchor="middle" fill="#065f46" font-size="10">Foundation</text>
+                <!-- Heat dots Zone A -->
+                <circle cx="60" cy="60" r="18" fill="rgba(16,185,129,0.25)"/>
+                <circle cx="90" cy="70" r="22" fill="rgba(16,185,129,0.3)"/>
+                <circle cx="130" cy="55" r="16" fill="rgba(16,185,129,0.2)"/>
+                <!-- Zone B -->
+                <rect x="190" y="30" width="140" height="120" rx="6" fill="rgba(29,78,216,0.15)" stroke="#1d4ed8" stroke-width="1.5"/>
+                <text x="260" y="85" text-anchor="middle" fill="#1e3a8a" font-size="13" font-weight="bold">Zone B</text>
+                <text x="260" y="100" text-anchor="middle" fill="#1e3a8a" font-size="10">MEP Services</text>
+                <!-- Heat dots Zone B (denser — more ops) -->
+                <circle cx="210" cy="55" r="20" fill="rgba(29,78,216,0.25)"/>
+                <circle cx="250" cy="65" r="28" fill="rgba(29,78,216,0.35)"/>
+                <circle cx="300" cy="50" r="18" fill="rgba(29,78,216,0.2)"/>
+                <circle cx="270" cy="80" r="22" fill="rgba(29,78,216,0.3)"/>
+                <!-- Zone C -->
+                <rect x="350" y="30" width="140" height="120" rx="6" fill="rgba(245,158,11,0.15)" stroke="#f59e0b" stroke-width="1.5"/>
+                <text x="420" y="85" text-anchor="middle" fill="#92400e" font-size="13" font-weight="bold">Zone C</text>
+                <text x="420" y="100" text-anchor="middle" fill="#92400e" font-size="10">Roofing</text>
+                <!-- Heat dots Zone C (sparse) -->
+                <circle cx="390" cy="60" r="14" fill="rgba(245,158,11,0.2)"/>
+                <circle cx="440" cy="70" r="16" fill="rgba(245,158,11,0.25)"/>
+                <!-- Zone D -->
+                <rect x="30" y="175" width="140" height="120" rx="6" fill="rgba(6,182,212,0.15)" stroke="#06b6d4" stroke-width="1.5"/>
+                <text x="100" y="230" text-anchor="middle" fill="#0e7490" font-size="13" font-weight="bold">Zone D</text>
+                <text x="100" y="245" text-anchor="middle" fill="#0e7490" font-size="10">Electrical</text>
+                <circle cx="65" cy="205" r="18" fill="rgba(6,182,212,0.2)"/>
+                <circle cx="120" cy="215" r="20" fill="rgba(6,182,212,0.25)"/>
+                <!-- Zone E -->
+                <rect x="190" y="175" width="140" height="120" rx="6" fill="rgba(148,163,184,0.15)" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6"/>
+                <text x="260" y="230" text-anchor="middle" fill="#64748b" font-size="13" font-weight="bold">Zone E</text>
+                <text x="260" y="245" text-anchor="middle" fill="#64748b" font-size="10">Facade (Pending)</text>
+                <!-- Assets -->
+                <g id="assetsLayer">
+                  <!-- Tower Crane -->
+                  <polygon points="255,55 262,85 248,85" fill="#1d4ed8" stroke="none"/>
+                  <rect x="253" y="42" width="4" height="15" fill="#1d4ed8"/>
+                  <line x1="245" y1="45" x2="275" y2="45" stroke="#1d4ed8" stroke-width="2"/>
+                  <text x="280" y="50" fill="#1d4ed8" font-size="8" font-family="monospace">TC-1</text>
+                  <!-- Excavator -->
+                  <rect x="60" y="200" width="18" height="12" rx="2" fill="#f59e0b"/>
+                  <text x="50" y="225" fill="#f59e0b" font-size="8" font-family="monospace">EX-2</text>
+                </g>
+                <!-- Gates -->
+                <rect x="155" y="165" width="30" height="14" rx="3" fill="#475569"/>
+                <text x="170" y="175" text-anchor="middle" fill="white" font-size="8" font-family="monospace">Gate A</text>
+                <rect x="330" y="165" width="30" height="14" rx="3" fill="#475569"/>
+                <text x="345" y="175" text-anchor="middle" fill="white" font-size="8" font-family="monospace">Gate B</text>
+                <!-- Compass -->
+                <text x="490" y="340" fill="#94a3b8" font-size="16" text-anchor="middle">N↑</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Zone utilisation -->
+          <div class="space-y-4">
+            <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
+              <h2 class="font-bold text-slate-900 mb-4">📊 Zone Utilisation</h2>
+              <div class="space-y-4" id="utilBars"></div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
+              <h2 class="font-bold text-slate-900 mb-4">🔑 Map Legend</h2>
+              <div class="space-y-2.5">
+                <div class="flex items-center gap-3"><div class="w-4 h-4 rounded-full bg-emerald-400 shrink-0"></div><p class="text-xs text-slate-600">High Operative Density</p></div>
+                <div class="flex items-center gap-3"><div class="w-4 h-4 rounded-full bg-blue-400 shrink-0"></div><p class="text-xs text-slate-600">Medium Density</p></div>
+                <div class="flex items-center gap-3"><div class="w-4 h-4 rounded-full bg-amber-400 shrink-0"></div><p class="text-xs text-slate-600">Low Density</p></div>
+                <div class="flex items-center gap-3"><div class="w-4 h-4 rounded-full bg-blue-700 shrink-0"></div><p class="text-xs text-slate-600">Asset Location</p></div>
+                <div class="flex items-center gap-3"><div class="w-4 h-4 rounded-full bg-slate-500 shrink-0"></div><p class="text-xs text-slate-600">Site Gate</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+    const utilData = [
+      {zone:'Zone A',ops:8,cap:12,color:'bg-emerald-500'},
+      {zone:'Zone B',ops:12,cap:14,color:'bg-blue-600'},
+      {zone:'Zone C',ops:5,cap:10,color:'bg-amber-500'},
+      {zone:'Zone D',ops:7,cap:10,color:'bg-cyan-500'},
+      {zone:'Zone E',ops:0,cap:8,color:'bg-slate-300'},
+    ]
+    document.getElementById('utilBars').innerHTML = utilData.map(z=>{
+      const pct = Math.round((z.ops/z.cap)*100)
+      return `<div>
+        <div class="flex justify-between text-xs mb-1"><span class="font-semibold text-slate-700">${z.zone}</span><span class="text-slate-500">${z.ops}/${z.cap} ops (${pct}%)</span></div>
+        <div class="bg-slate-100 rounded-full h-2.5"><div class="${z.color} h-2.5 rounded-full" style="width:${pct}%"></div></div>
+      </div>`
+    }).join('')
+
+    function toggleLayer(id, btn) {
+      btn.classList.toggle('bg-blue-600')
+      btn.classList.toggle('text-white')
+      btn.classList.toggle('bg-slate-100')
+      btn.classList.toggle('text-slate-600')
+    }
+  </script>
+</body>
+</html>

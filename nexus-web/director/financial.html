@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>UBA — Financial Reports</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="../assets/style.css"/></head>
+<body class="font-sans min-h-screen flex flex-col">
+  <header class="h-16 bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50">
+    <div class="max-w-[1440px] mx-auto px-6 h-full flex items-center justify-between gap-6">
+      <div class="flex items-center gap-3 shrink-0"><div class="w-9 h-9 bg-cyan-700 rounded-lg flex items-center justify-center shadow"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></div><span class="text-lg font-bold text-slate-900 tracking-tight">UBA</span></div>
+      <div class="flex items-center gap-2.5 px-3 shrink-0"><div class="w-9 h-9 rounded-full bg-blue-700 flex items-center justify-center text-white text-sm font-bold">PS</div><div class="hidden md:block"><p class="text-sm font-semibold text-slate-900">Dr. Priya Sharma</p><p class="text-xs text-slate-500">Operations Director</p></div><a href="../index.html" class="ml-2 text-xs text-rose-600 font-bold hover:underline">Sign Out</a></div>
+    </div>
+  </header>
+  <div class="flex flex-1">
+    <aside class="w-60 shrink-0 bg-slate-900 min-h-[calc(100vh-4rem)] flex flex-col">
+      <nav class="flex-1 px-3 py-4 space-y-1">
+        <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white">📊 Command Centre</a>
+        <a href="config.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white">⚙️ Project Config</a>
+        <a href="financial.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium bg-blue-600 text-white shadow-lg">📈 Financial Reports</a>
+        <a href="digital-twin.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white">📦 Digital Twin</a>
+      </nav>
+      <div class="px-3 pb-4"><div class="border-t border-slate-800 pt-3"><p class="text-xs text-slate-600 text-center">UBA Ops v1.0</p></div></div>
+    </aside>
+    <main class="flex-1 bg-slate-50 p-8 overflow-y-auto">
+      <div class="max-w-6xl mx-auto space-y-8">
+        <div class="flex items-start justify-between">
+          <div><h1 class="text-3xl font-bold text-slate-900">Financial Reports</h1><p class="text-slate-500 mt-1">Budget tracking, burn rate analysis, and milestone financial variance</p></div>
+          <button onclick="exportReport()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-xl transition shadow text-sm flex items-center gap-2">📥 Export Report</button>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-2 xl:grid-cols-4 gap-5">
+          <div id="financialKPIs" class="contents"></div>
+        </div>
+
+        <!-- Burn Rate Chart -->
+        <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-7">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="font-bold text-slate-900 text-lg">📊 Monthly Burn Rate</h2>
+            <span class="text-xs bg-slate-100 text-slate-600 font-semibold px-3 py-1 rounded-full">Jan — Jun 2026</span>
+          </div>
+          <div class="flex items-end gap-3 h-48" id="burnChart"></div>
+          <div class="flex gap-4 mt-4">
+            <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-blue-600"></div><span class="text-xs text-slate-500">Actual Spend</span></div>
+            <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-slate-300"></div><span class="text-xs text-slate-500">Planned Budget</span></div>
+          </div>
+        </div>
+
+        <!-- Milestone Financial Variance -->
+        <div class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+          <div class="px-6 py-4 bg-slate-800"><h2 class="font-bold text-white text-base">Milestone Financial Variance</h2></div>
+          <table class="w-full">
+            <thead><tr class="bg-slate-50 border-b border-slate-200"><th class="text-left px-5 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">Milestone</th><th class="text-left px-5 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">Planned Cost</th><th class="text-left px-5 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">Actual Cost</th><th class="text-left px-5 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">Variance</th><th class="text-left px-5 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">Status</th></tr></thead>
+            <tbody id="milestoneTable"></tbody>
+          </table>
+        </div>
+
+        <!-- Cost by Zone -->
+        <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-7">
+          <h2 class="font-bold text-slate-900 text-lg mb-5">💰 Cost Distribution by Zone</h2>
+          <div class="space-y-4" id="costZones"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+    document.getElementById('financialKPIs').innerHTML = [
+      {l:'Total Budget',v:'$4.2M',sub:'Approved Q2 2026',col:'text-slate-900',bg:'bg-white'},
+      {l:'Spent to Date',v:'$2.97M',sub:'71% of total budget',col:'text-blue-700',bg:'bg-white'},
+      {l:'Forecast at Completion',v:'$4.18M',sub:'▼ $20K under budget',col:'text-emerald-700',bg:'bg-emerald-50'},
+      {l:'Outstanding Invoices',v:'$126.3K',sub:'3 pending approvals',col:'text-amber-700',bg:'bg-amber-50'},
+    ].map(k=>`<div class="${k.bg} rounded-3xl shadow-lg border border-slate-200 p-6"><p class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">${k.l}</p><p class="text-3xl font-extrabold ${k.col}">${k.v}</p><p class="text-xs text-slate-500 mt-1">${k.sub}</p></div>`).join('')
+
+    // Burn rate chart
+    const months = ['Jan','Feb','Mar','Apr','May','Jun']
+    const actual = [380,420,490,560,620,500]
+    const planned = [400,400,450,500,550,520]
+    const maxVal = Math.max(...actual,...planned)
+    document.getElementById('burnChart').innerHTML = months.map((m,i)=>`
+      <div class="flex-1 flex flex-col items-center gap-1">
+        <div class="w-full flex items-end gap-1 h-40">
+          <div class="flex-1 bg-blue-600 rounded-t-lg transition-all" style="height:${(actual[i]/maxVal)*100}%" title="Actual: $${actual[i]}K"></div>
+          <div class="flex-1 bg-slate-200 rounded-t-lg transition-all" style="height:${(planned[i]/maxVal)*100}%" title="Planned: $${planned[i]}K"></div>
+        </div>
+        <p class="text-xs text-slate-500 font-medium">${m}</p>
+      </div>`).join('')
+
+    // Milestone variance
+    const milestones = [
+      {m:'M1: Site Mobilisation',p:'$180,000',a:'$174,200',v:'-$5,800',positive:true,s:'Complete'},
+      {m:'M2: Foundation Works',p:'$520,000',a:'$531,400',v:'+$11,400',positive:false,s:'Complete'},
+      {m:'M3: MEP Rough-In',p:'$780,000',a:'$769,800',v:'-$10,200',positive:true,s:'Complete'},
+      {m:'M4: Structural Frame',p:'$940,000',a:'$956,200',v:'+$16,200',positive:false,s:'Complete'},
+      {m:'M5: Building Envelope',p:'$620,000',a:'$608,700',v:'-$11,300',positive:true,s:'In Progress'},
+      {m:'M6: Envelope & Cladding',p:'$540,000',a:'—',v:'—',positive:true,s:'Upcoming'},
+    ]
+    document.getElementById('milestoneTable').innerHTML = milestones.map((r,i)=>`
+      <tr class="border-b border-slate-100 hover:bg-slate-50 transition ${i%2?'bg-slate-50/50':''}">
+        <td class="px-5 py-4 text-sm font-semibold text-slate-900">${r.m}</td>
+        <td class="px-5 py-4 text-sm text-slate-600">${r.p}</td>
+        <td class="px-5 py-4 text-sm font-bold text-slate-900">${r.a}</td>
+        <td class="px-5 py-4 text-sm font-bold ${r.v==='—'?'text-slate-400':r.positive?'text-emerald-600':'text-rose-600'}">${r.v}</td>
+        <td class="px-5 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-bold ${r.s==='Complete'?'bg-emerald-100 text-emerald-700':r.s==='In Progress'?'bg-blue-100 text-blue-700':'bg-slate-100 text-slate-500'}">${r.s}</span></td>
+      </tr>`).join('')
+
+    // Cost by zone
+    const zones = [
+      {name:'Zone A — Foundation',spent:820000,budget:900000},
+      {name:'Zone B — MEP Services',spent:1040000,budget:1100000},
+      {name:'Zone C — Roofing',spent:290000,budget:350000},
+      {name:'Zone D — Electrical',spent:420000,budget:450000},
+      {name:'Zone E — Facade',spent:80000,budget:400000},
+    ]
+    document.getElementById('costZones').innerHTML = zones.map(z=>{
+      const pct = Math.round((z.spent/z.budget)*100)
+      return `<div>
+        <div class="flex items-center justify-between mb-1.5">
+          <p class="text-sm font-semibold text-slate-800">${z.name}</p>
+          <p class="text-xs text-slate-500">$${(z.spent/1000).toFixed(0)}K / $${(z.budget/1000).toFixed(0)}K <span class="font-bold text-slate-700">(${pct}%)</span></p>
+        </div>
+        <div class="bg-slate-100 rounded-full h-3"><div class="h-3 rounded-full transition-all ${pct>90?'bg-amber-500':pct>70?'bg-blue-600':'bg-emerald-500'}" style="width:${pct}%"></div></div>
+      </div>`
+    }).join('')
+
+    function exportReport() {
+      const btn = event.target
+      btn.textContent = '⏳ Generating…'
+      setTimeout(()=>{ btn.textContent = '✓ Exported'; setTimeout(()=>btn.textContent='📥 Export Report',2000) },1500)
+    }
+  </script>
+</body>
+</html>

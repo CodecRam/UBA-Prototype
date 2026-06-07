@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>UBA — PM Team</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="../assets/style.css"/></head>
+<body class="font-sans min-h-screen flex flex-col">
+  <header class="h-16 bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50">
+    <div class="max-w-[1440px] mx-auto px-6 h-full flex items-center justify-between gap-6">
+      <div class="flex items-center gap-3 shrink-0"><div class="w-9 h-9 bg-cyan-700 rounded-lg flex items-center justify-center shadow"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></div><span class="text-lg font-bold text-slate-900 tracking-tight">UBA</span></div>
+      <div class="flex items-center gap-2.5 px-3 shrink-0"><div class="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-white text-sm font-bold">MC</div><div class="hidden md:block"><p class="text-sm font-semibold text-slate-900">Marcus Chen</p><p class="text-xs text-slate-500">Project Manager</p></div><a href="../index.html" class="ml-2 text-xs text-rose-600 font-bold hover:underline">Sign Out</a></div>
+    </div>
+  </header>
+  <div class="flex flex-1">
+    <aside class="w-60 shrink-0 bg-slate-900 min-h-[calc(100vh-4rem)] flex flex-col">
+      <nav class="flex-1 px-3 py-4 space-y-1">
+        <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white">📊 PM Dashboard</a>
+        <a href="schedule.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white">📅 Schedule</a>
+        <a href="team.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium bg-blue-600 text-white shadow-lg">👥 Team</a>
+        <a href="reports.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white">📋 Reports</a>
+      </nav>
+      <div class="px-3 pb-4"><div class="border-t border-slate-800 pt-3"><p class="text-xs text-slate-600 text-center">UBA Ops v1.0</p></div></div>
+    </aside>
+    <main class="flex-1 bg-slate-50 p-8 overflow-y-auto">
+      <div class="max-w-6xl mx-auto space-y-8">
+        <div class="flex items-start justify-between">
+          <div><h1 class="text-3xl font-bold text-slate-900">Team Management</h1><p class="text-slate-500 mt-1">Workforce allocation, roles, certifications, and performance</p></div>
+          <button onclick="addMember()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-xl transition shadow text-sm">+ Add Member</button>
+        </div>
+
+        <!-- Team Stats -->
+        <div class="grid grid-cols-4 gap-4" id="teamStats"></div>
+
+        <!-- Zone Allocation -->
+        <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-7">
+          <h2 class="font-bold text-slate-900 text-lg mb-5">🗺️ Zone Allocation Summary</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="zoneCards"></div>
+        </div>
+
+        <!-- Team Directory -->
+        <div class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+          <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+            <h2 class="font-bold text-slate-900 text-lg">👤 Team Directory</h2>
+            <select id="roleFilter" onchange="filterTeam()" class="text-sm border border-slate-200 rounded-xl px-4 py-2 focus:outline-none bg-white">
+              <option value="">All Roles</option>
+              <option value="Site Supervisor">Site Supervisor</option>
+              <option value="Site Worker">Site Worker</option>
+              <option value="Logistics Coordinator">Logistics Coordinator</option>
+              <option value="Safety Officer">Safety Officer</option>
+            </select>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead><tr class="bg-slate-50 border-b border-slate-200">
+                <th class="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">Name</th>
+                <th class="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">Role</th>
+                <th class="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">Zone</th>
+                <th class="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">Specialisation</th>
+                <th class="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">Hrs This Week</th>
+                <th class="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">Cert Status</th>
+                <th class="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">Status</th>
+              </tr></thead>
+              <tbody id="teamTable"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Add member modal -->
+        <div id="addModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full">
+            <h3 class="font-bold text-slate-900 text-xl mb-5">Add Team Member</h3>
+            <div class="space-y-4">
+              <div><label class="text-xs font-bold text-slate-600 uppercase">Full Name</label><input type="text" placeholder="e.g. Jordan Lee" class="w-full mt-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"/></div>
+              <div><label class="text-xs font-bold text-slate-600 uppercase">Role</label>
+                <select class="w-full mt-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option>Site Worker</option><option>Site Supervisor</option><option>Logistics Coordinator</option><option>Safety Officer</option>
+                </select>
+              </div>
+              <div><label class="text-xs font-bold text-slate-600 uppercase">Assigned Zone</label>
+                <select class="w-full mt-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option>Zone A</option><option>Zone B</option><option>Zone C</option><option>Zone D</option><option>Zone E</option>
+                </select>
+              </div>
+            </div>
+            <div class="flex gap-3 mt-6">
+              <button onclick="closeModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl text-sm">Cancel</button>
+              <button onclick="confirmAdd()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm">Add Member →</button>
+            </div>
+          </div>
+        </div>
+        <div id="addLog" class="hidden"></div>
+      </div>
+    </main>
+  </div>
+  <script>
+    document.getElementById('teamStats').innerHTML = [
+      {l:'Total Headcount',v:'42',c:'text-slate-900',bg:'bg-white'},
+      {l:'On Site Today',v:'38',c:'text-emerald-700',bg:'bg-emerald-50'},
+      {l:'Cert Expiring (30d)',v:'4',c:'text-amber-700',bg:'bg-amber-50'},
+      {l:'Zones Staffed',v:'5',c:'text-blue-700',bg:'bg-blue-50'},
+    ].map(s=>`<div class="${s.bg} rounded-2xl border border-slate-200 shadow-sm p-4 text-center"><p class="text-2xl font-extrabold ${s.c}">${s.v}</p><p class="text-xs text-slate-500 font-medium mt-1">${s.l}</p></div>`).join('')
+
+    const zones = [
+      {name:'Zone A — Foundation',supervisor:'Jamie Smith',workers:8,capacity:12,color:'emerald'},
+      {name:'Zone B — MEP Services',supervisor:'Alex Rivera',workers:12,capacity:14,color:'blue'},
+      {name:'Zone C — Roofing',supervisor:'Sam Chen',workers:5,capacity:10,color:'amber'},
+      {name:'Zone D — Electrical',supervisor:'Morgan Lee',workers:7,capacity:10,color:'cyan'},
+      {name:'Zone E — Facade',supervisor:'TBD',workers:0,capacity:8,color:'slate'},
+    ]
+    const zColors = {emerald:'bg-emerald-50 border-emerald-200 text-emerald-700',blue:'bg-blue-50 border-blue-200 text-blue-700',amber:'bg-amber-50 border-amber-200 text-amber-700',cyan:'bg-cyan-50 border-cyan-200 text-cyan-700',slate:'bg-slate-50 border-slate-200 text-slate-500'}
+    const barColors = {emerald:'bg-emerald-500',blue:'bg-blue-500',amber:'bg-amber-500',cyan:'bg-cyan-500',slate:'bg-slate-300'}
+    document.getElementById('zoneCards').innerHTML = zones.map(z=>{
+      const pct = z.capacity>0 ? Math.round(z.workers/z.capacity*100) : 0
+      return `<div class="${zColors[z.color]} border-2 rounded-2xl p-4">
+        <p class="font-bold text-slate-900 text-sm">${z.name}</p>
+        <p class="text-xs text-slate-500 mt-0.5 mb-3">Supervisor: ${z.supervisor}</p>
+        <div class="flex justify-between text-xs mb-1"><span class="text-slate-500">Staffing</span><span class="font-bold">${z.workers}/${z.capacity} (${pct}%)</span></div>
+        <div class="bg-white/60 rounded-full h-2"><div class="${barColors[z.color]} h-2 rounded-full" style="width:${pct}%"></div></div>
+      </div>`
+    }).join('')
+
+    const allTeam = [
+      {name:'Jamie Smith',role:'Site Supervisor',zone:'Zone A',spec:'Civil & Structural',hrs:38,cert:'Valid',status:'On Site'},
+      {name:'Alex Rivera',role:'Site Supervisor',zone:'Zone B',spec:'MEP Services',hrs:42,cert:'Valid',status:'On Site'},
+      {name:'Sam Chen',role:'Site Supervisor',zone:'Zone C',spec:'Roofing & Waterproofing',hrs:36,cert:'Expiring',status:'On Site'},
+      {name:'Morgan Lee',role:'Site Supervisor',zone:'Zone D',spec:'Electrical',hrs:40,cert:'Valid',status:'On Site'},
+      {name:'Alex Morgan',role:'Site Worker',zone:'Zone B',spec:'HVAC & Electrical',hrs:38,cert:'Valid',status:'On Site'},
+      {name:'Jordan Park',role:'Site Worker',zone:'Zone A',spec:'Formwork',hrs:34,cert:'Valid',status:'On Site'},
+      {name:'Riley Davis',role:'Site Worker',zone:'Zone C',spec:'Roofing',hrs:12,cert:'Expiring',status:'Off Site'},
+      {name:'Casey Wu',role:'Site Worker',zone:'Zone D',spec:'Electrical',hrs:40,cert:'Valid',status:'On Site'},
+      {name:'Tyler Kim',role:'Logistics Coordinator',zone:'Site-Wide',spec:'Procurement & Delivery',hrs:44,cert:'Valid',status:'On Site'},
+      {name:'Nadia Brennan',role:'Safety Officer',zone:'Site-Wide',spec:'Compliance & Hazard',hrs:38,cert:'Valid',status:'On Site'},
+    ]
+    const certC = {Valid:'bg-emerald-100 text-emerald-700',Expiring:'bg-amber-100 text-amber-700',Expired:'bg-rose-100 text-rose-700'}
+    const statC = {'On Site':'bg-emerald-100 text-emerald-700','Off Site':'bg-slate-100 text-slate-500'}
+
+    function renderTeam(data) {
+      document.getElementById('teamTable').innerHTML = data.map((m,i)=>`
+        <tr class="border-b border-slate-100 hover:bg-slate-50 transition ${i%2?'bg-slate-50/50':''}">
+          <td class="px-4 py-3 font-semibold text-slate-900 text-sm">${m.name}</td>
+          <td class="px-4 py-3 text-sm text-slate-600">${m.role}</td>
+          <td class="px-4 py-3 text-xs text-slate-500">${m.zone}</td>
+          <td class="px-4 py-3 text-xs text-slate-600">${m.spec}</td>
+          <td class="px-4 py-3 text-sm font-medium text-slate-700">${m.hrs} hrs</td>
+          <td class="px-4 py-3"><span class="px-2.5 py-1 rounded-full text-xs font-bold ${certC[m.cert]}">${m.cert}</span></td>
+          <td class="px-4 py-3"><span class="px-2.5 py-1 rounded-full text-xs font-bold ${statC[m.status]}">${m.status}</span></td>
+        </tr>`).join('')
+    }
+    renderTeam(allTeam)
+
+    function filterTeam() {
+      const role = document.getElementById('roleFilter').value
+      renderTeam(role ? allTeam.filter(m=>m.role===role) : allTeam)
+    }
+
+    function addMember() { document.getElementById('addModal').classList.remove('hidden') }
+    function closeModal() { document.getElementById('addModal').classList.add('hidden') }
+    function confirmAdd() {
+      closeModal()
+      document.getElementById('addLog').classList.remove('hidden')
+      document.getElementById('addLog').innerHTML = `<div class="bg-slate-950 rounded-2xl border border-slate-800 p-5 space-y-1.5"><p class="text-xs font-bold text-blue-400 mb-2">▶ ONBOARDING</p><p class="font-mono text-xs text-slate-300"><span class="text-blue-400 mr-2">▶</span>[Auth]: Provisioning UBA Identity Token…</p><p class="font-mono text-xs text-slate-300"><span class="text-blue-400 mr-2">▶</span>[RBAC]: Assigning role permissions…</p><p class="font-mono text-xs text-slate-300"><span class="text-blue-400 mr-2">▶</span>[Notify]: Welcome email dispatched…</p><p class="font-mono text-xs text-emerald-400"><span class="text-blue-400 mr-2">▶</span>✓ Team member added successfully</p></div>`
+    }
+  </script>
+</body>
+</html>

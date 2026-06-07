@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(textutil -convert txt \"/Users/r7amos/Desktop/Business Prototype/Prototype - UrbanBuild AI \\(UBA\\) - Report.docx\" -output /tmp/uba_report.txt)",
+      "Read(//tmp/**)",
+      "WebFetch(domain:yoga-yoga-65797768.figma.site)",
+      "Bash(curl -s \"https://yoga-yoga-65797768.figma.site/_json/5c85b988-8c83-4081-94d6-67b22729810f/_index.json\")",
+      "Bash(curl -s -L \"https://yoga-yoga-65797768.figma.site/_json/5c85b988-8c83-4081-94d6-67b22729810f/_index.json\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d, indent=2\\)\\)\")",
+      "Bash(curl -s \"https://yoga-yoga-65797768.figma.site/_components/v2/0539c8a771f63aeab2dcfab811569c511185f956.js\")",
+      "Bash(python3 *)",
+      "Bash(mkdir -p \"/Users/r7amos/Desktop/Business Prototype/nexus-ops/src/components\")",
+      "Bash(mkdir -p \"/Users/r7amos/Desktop/Business Prototype/nexus-ops/src/pages/operative\")",
+      "Bash(mkdir -p \"/Users/r7amos/Desktop/Business Prototype/nexus-ops/src/pages/supervisor\")",
+      "Bash(mkdir -p \"/Users/r7amos/Desktop/Business Prototype/nexus-ops/src/pages/director\")",
+      "Bash(mkdir -p \"/Users/r7amos/Desktop/Business Prototype/nexus-ops/src/pages/coordinator\")",
+      "Bash(npm install *)",
+      "Read(//usr/local/bin/**)",
+      "Read(//Users/r7amos/.nvm/versions/**)",
+      "Bash(export PATH=\"$HOME/.nvm/versions/node/$\\(ls ~/.nvm/versions/node)"
+    ]
+  }
+}

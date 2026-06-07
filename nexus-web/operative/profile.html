@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>UBA — Operator Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body class="font-sans min-h-screen bg-slate-50 pb-24">
+  <header class="bg-gradient-to-r from-blue-700 to-blue-800 text-white px-5 py-5">
+    <div class="max-w-2xl mx-auto">
+      <h1 class="text-xl font-bold">Operator Profile</h1>
+      <p class="text-blue-300 text-sm mt-0.5">Your identity token and credentials</p>
+    </div>
+  </header>
+
+  <div class="px-4 py-5 max-w-2xl mx-auto space-y-5">
+    <!-- Stats -->
+    <div class="grid grid-cols-4 gap-3">
+      <div class="bg-white rounded-2xl p-3 border border-slate-200 text-center shadow-sm"><p class="text-xl font-bold text-blue-700">61</p><p class="text-xs text-slate-500 mt-0.5 font-medium">Tasks Done</p></div>
+      <div class="bg-white rounded-2xl p-3 border border-slate-200 text-center shadow-sm"><p class="text-xl font-bold text-cyan-600">204</p><p class="text-xs text-slate-500 mt-0.5 font-medium">Hours Logged</p></div>
+      <div class="bg-white rounded-2xl p-3 border border-slate-200 text-center shadow-sm"><p class="text-xl font-bold text-rose-600">4</p><p class="text-xs text-slate-500 mt-0.5 font-medium">Incidents</p></div>
+      <div class="bg-white rounded-2xl p-3 border border-slate-200 text-center shadow-sm"><p class="text-xl font-bold text-emerald-600">5</p><p class="text-xs text-slate-500 mt-0.5 font-medium">Certs</p></div>
+    </div>
+
+    <!-- Profile details -->
+    <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="font-bold text-slate-900">Identity Details</h2>
+        <button onclick="toggleEdit()" id="editBtn" class="flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-800 transition">✏️ Edit</button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="profileFields"></div>
+    </div>
+
+    <!-- Certs -->
+    <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
+      <h2 class="font-bold text-slate-900 mb-4 flex items-center gap-2">🏆 Certifications</h2>
+      <div class="space-y-3" id="certList"></div>
+    </div>
+
+    <!-- Digital Identity Token -->
+    <div class="bg-blue-50 rounded-2xl border-2 border-blue-200 p-5">
+      <p class="text-sm font-bold text-blue-900 mb-2">Digital Identity Token Status</p>
+      <div class="flex items-center gap-2 mb-2">
+        <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
+        <span class="text-sm text-emerald-700 font-semibold">Verified &amp; Active</span>
+      </div>
+      <p class="font-mono text-sm text-blue-700 font-bold" id="tokenId"></p>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-6">
+      <h2 class="font-bold text-slate-900 mb-4 flex items-center gap-2">🕐 Recent Activity</h2>
+      <div class="space-y-3" id="activityList"></div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-2xl z-50">
+    <div class="flex max-w-2xl mx-auto">
+      <a href="dashboard.html" class="flex-1 flex flex-col items-center gap-1 py-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="text-xs font-semibold text-slate-400">Home</span></a>
+      <a href="tasks.html" class="flex-1 flex flex-col items-center gap-1 py-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span class="text-xs font-semibold text-slate-400">Tasks</span></a>
+      <a href="incidents.html" class="flex-1 flex flex-col items-center gap-1 py-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg><span class="text-xs font-semibold text-slate-400">Incidents</span></a>
+      <a href="knowledge.html" class="flex-1 flex flex-col items-center gap-1 py-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span class="text-xs font-semibold text-slate-400">Knowledge</span></a>
+      <a href="profile.html" class="flex-1 flex flex-col items-center gap-1 py-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="text-xs font-semibold text-blue-600">Profile</span><span class="w-8 h-0.5 bg-blue-600 rounded-full"></span></a>
+    </div>
+  </nav>
+
+  <script>
+    const certs = [
+      {name:'Electrical Safety Certificate',exp:'Dec 2027',valid:true},
+      {name:'Working at Heights',exp:'Jun 2027',valid:true},
+      {name:'Confined Spaces Entry',exp:'Jan 2027',valid:true},
+      {name:'First Aid Certificate Level 2',exp:'Mar 2026',valid:false},
+      {name:'Elevated Work Platform',exp:'Aug 2027',valid:true},
+    ]
+    document.getElementById('certList').innerHTML = certs.map(c=>`
+      <div class="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center ${c.valid?'bg-emerald-100':'bg-rose-100'}">
+            <span>${c.valid?'✅':'❌'}</span>
+          </div>
+          <div><p class="text-sm font-semibold text-slate-900">${c.name}</p><p class="text-xs text-slate-500">Expires: ${c.exp}</p></div>
+        </div>
+        <span class="px-2.5 py-1 rounded-full text-xs font-bold ${c.valid?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${c.valid?'Valid':'Expired'}</span>
+      </div>`).join('')
+
+    const activities = [
+      {a:'Completed Task: HVAC Duct Inspection',s:'Zone B · Floor 3',t:'2 hours ago'},
+      {a:'Checked In at Site',s:'Zone A · Main Facility',t:'4 hours ago'},
+      {a:'Submitted Incident Report — NXS-IR-2041',s:'Zone B',t:'Yesterday'},
+      {a:'Accessed AR Guide: Conduit Installation',s:'Knowledge Base',t:'2 days ago'},
+    ]
+    document.getElementById('activityList').innerHTML = activities.map(a=>`
+      <div class="flex items-start gap-3 py-2 border-b border-slate-100 last:border-0">
+        <div class="w-2 h-2 rounded-full bg-blue-400 mt-1.5 shrink-0"></div>
+        <div class="flex-1"><p class="text-sm font-semibold text-slate-900">${a.a}</p><p class="text-xs text-slate-500">${a.s} • ${a.t}</p></div>
+      </div>`).join('')
+
+    document.getElementById('tokenId').textContent = 'NXS-OP-' + Math.random().toString(36).slice(2,10).toUpperCase()
+
+    const profile = {name:'Alex Morgan',email:'alex.morgan@uba-ops.com',phone:'+61 412 345 678',license:'OL-78432',clearance:'CL-2-UBA',specialty:'HVAC & Electrical Systems'}
+    const labels = {name:'Full Name',email:'Email',phone:'Phone',license:'Operator License',clearance:'Site Clearance',specialty:'Specialty'}
+    let editing = false
+
+    function renderFields() {
+      document.getElementById('profileFields').innerHTML = Object.entries(labels).map(([k,l])=>`
+        <div>
+          <p class="text-xs text-slate-500 font-semibold mb-1">${l}</p>
+          ${editing
+            ? `<input value="${profile[k]}" onchange="profile['${k}']=this.value" class="w-full px-3 py-2 border-2 border-blue-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500">`
+            : `<p class="text-sm font-semibold text-slate-900">${profile[k]}</p>`}
+        </div>`).join('')
+    }
+
+    function toggleEdit() {
+      editing = !editing
+      document.getElementById('editBtn').textContent = editing ? '💾 Save' : '✏️ Edit'
+      renderFields()
+    }
+
+    renderFields()
+  </script>
+</body>
+</html>

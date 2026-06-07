@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>UBA — Asset Coordinator Hub</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="../assets/style.css"/></head>
+<body class="font-sans min-h-screen flex flex-col">
+  <header class="h-16 bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50">
+    <div class="max-w-[1440px] mx-auto px-6 h-full flex items-center justify-between gap-6">
+      <div class="flex items-center gap-3 shrink-0"><div class="w-9 h-9 bg-cyan-700 rounded-lg flex items-center justify-center shadow"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></div><span class="text-lg font-bold text-slate-900 tracking-tight">UBA</span></div>
+      <div class="flex items-center gap-2.5 px-3 shrink-0"><div class="w-9 h-9 rounded-full bg-amber-600 flex items-center justify-center text-white text-sm font-bold">TK</div><div class="hidden md:block"><p class="text-sm font-semibold text-slate-900">Tyler Kim</p><p class="text-xs text-slate-500">Asset Coordinator</p></div><a href="../index.html" class="ml-2 text-xs text-rose-600 font-bold hover:underline">Sign Out</a></div>
+    </div>
+  </header>
+  <div class="flex flex-1">
+    <aside class="w-60 shrink-0 bg-slate-900 min-h-[calc(100vh-4rem)] flex flex-col">
+      <nav class="flex-1 px-3 py-4 space-y-1">
+        <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium bg-blue-600 text-white shadow-lg">🏠 Asset Hub</a>
+        <a href="deliveries.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white">🚛 Deliveries</a>
+        <a href="inventory.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white">📦 Inventory</a>
+        <a href="maps.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white">🗺️ Zone Maps</a>
+      </nav>
+      <div class="px-3 pb-4"><div class="border-t border-slate-800 pt-3"><p class="text-xs text-slate-600 text-center">UBA Ops v1.0</p></div></div>
+    </aside>
+    <main class="flex-1 bg-slate-50 p-8 overflow-y-auto">
+      <div class="max-w-6xl mx-auto space-y-8">
+        <div><h1 class="text-3xl font-bold text-slate-900">Asset Coordinator Hub</h1><p class="text-slate-500 mt-1">Fleet telemetry, JIT delivery scheduling, and predictive maintenance</p></div>
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-2 xl:grid-cols-4 gap-5" id="coordKPIs"></div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+          <!-- Tower Crane Asset Card -->
+          <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-7">
+            <div class="flex items-center justify-between mb-5">
+              <div class="flex items-center gap-3"><span class="text-3xl">🏗️</span><div><p class="font-bold text-slate-900">Tower Crane TC-1</p><p class="text-xs text-slate-500">Asset ID: AST-TC-001 · Zone B</p></div></div>
+              <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">Operational</span>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-5" id="craneStats"></div>
+            <!-- Load gauge -->
+            <div class="mb-4">
+              <div class="flex justify-between text-xs text-slate-500 mb-1.5"><span>Current Load</span><span class="font-bold text-slate-700">70%</span></div>
+              <div class="bg-slate-100 rounded-full h-4 relative overflow-hidden">
+                <div class="h-4 rounded-full bg-gradient-to-r from-emerald-400 to-emerald-600 transition-all" style="width:70%">
+                  <div class="absolute inset-0 bg-white/20 animate-pulse rounded-full"></div>
+                </div>
+              </div>
+            </div>
+            <button onclick="runDiag()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm transition">Run Diagnostics</button>
+            <div id="diagLog" class="mt-4"></div>
+          </div>
+
+          <!-- Predictive Maintenance -->
+          <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-7">
+            <h2 class="font-bold text-slate-900 text-lg mb-5">🔧 Predictive Maintenance Queue</h2>
+            <div class="space-y-3" id="maintQueue"></div>
+            <!-- Downtime Calculator -->
+            <div class="mt-6 bg-slate-50 rounded-2xl border border-slate-200 p-4">
+              <p class="text-sm font-bold text-slate-900 mb-3">Estimated Downtime Impact</p>
+              <div class="grid grid-cols-3 gap-3" id="downtimeGrid"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Log -->
+        <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-7">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="font-bold text-slate-900 text-lg">📡 Asset Telemetry Log</h2>
+            <span class="flex items-center gap-2 text-xs font-semibold text-emerald-600 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-xl"><span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>Live Feed</span>
+          </div>
+          <div class="bg-slate-950 rounded-2xl border border-slate-800 p-5 space-y-1.5" id="telemetryLog"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+    document.getElementById('coordKPIs').innerHTML = [{l:'Active Assets',v:'14',icon:'🏗️',bg:'bg-white',c:'text-slate-900'},{l:'Fleet Uptime',v:'96%',icon:'⚡',bg:'bg-emerald-50',c:'text-emerald-700'},{l:'Pending Deliveries',v:'5',icon:'🚛',bg:'bg-white',c:'text-slate-900'},{l:'Maintenance Due',v:'3',icon:'🔧',bg:'bg-amber-50',c:'text-amber-700'}].map(k=>`<div class="${k.bg} rounded-3xl shadow-lg border border-slate-200 p-6"><div class="flex items-center gap-3 mb-2"><span class="text-2xl">${k.icon}</span><p class="text-3xl font-extrabold ${k.c}">${k.v}</p></div><p class="text-sm text-slate-500 font-medium">${k.l}</p></div>`).join('')
+    document.getElementById('craneStats').innerHTML = [{l:'Hours Today',v:'6.2 hrs'},{l:'Max Load',v:'8.4T / 12T'},{l:'Cycle Count',v:'48 lifts'},{l:'Next Service',v:'Jun 14, 2026'}].map(s=>`<div class="bg-slate-50 rounded-xl p-3 border border-slate-100"><p class="text-xs text-slate-500">${s.l}</p><p class="font-bold text-slate-900 text-sm">${s.v}</p></div>`).join('')
+    document.getElementById('downtimeGrid').innerHTML = [{l:'TC-1 Service',v:'4 hrs'},{l:'EX-2 Repair',v:'2 hrs'},{l:'Total Impact',v:'6 hrs'}].map(d=>`<div class="text-center"><p class="text-xs text-slate-500 mb-1">${d.l}</p><p class="font-bold text-blue-700">${d.v}</p></div>`).join('')
+    const maint = [
+      {id:'AST-TC-001',name:'Tower Crane TC-1',issue:'Hydraulic seal inspection due',priority:'Medium',due:'Jun 14'},
+      {id:'AST-EX-002',name:'Excavator EX-2',issue:'Track wear — replacement required',priority:'High',due:'Jun 10'},
+      {id:'AST-GN-003',name:'Generator GN-3',issue:'Filter service overdue',priority:'Low',due:'Jun 20'},
+    ]
+    document.getElementById('maintQueue').innerHTML = maint.map(m=>`
+      <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+        <div class="flex items-start justify-between mb-1">
+          <div><p class="font-mono text-xs text-slate-400">${m.id}</p><p class="text-sm font-semibold text-slate-900">${m.name}</p></div>
+          <span class="text-xs font-bold px-2 py-0.5 rounded-full ${m.priority==='High'?'bg-rose-100 text-rose-700':m.priority==='Medium'?'bg-amber-100 text-amber-700':'bg-slate-100 text-slate-500'}">${m.priority}</span>
+        </div>
+        <p class="text-xs text-slate-600">${m.issue}</p>
+        <p class="text-xs text-slate-400 mt-1">Due: ${m.due}</p>
+      </div>`).join('')
+
+    const diagLogs = ['[IoT Hub]: Connecting to TC-1 sensor array…','[Diagnostics]: Checking hydraulic pressure (OK: 280 bar)…','[Diagnostics]: Load cell calibration within tolerance…','[Diagnostics]: Reviewing rotation motor RPM logs…','✓ Diagnostics complete — No critical faults detected']
+    function runDiag() {
+      document.getElementById('diagLog').innerHTML = `<div class="bg-slate-950 rounded-2xl border border-slate-800 p-4 space-y-1.5"><p class="text-xs font-bold text-blue-400 mb-2">▶ DIAGNOSTICS</p>${diagLogs.map(l=>`<p class="font-mono text-xs text-slate-300"><span class="text-blue-400 mr-2">▶</span>${l}</p>`).join('')}</div>`
+    }
+
+    const telemetry = [
+      {t:'12:04:22',msg:'TC-1: Load cell reading 5.9T — normal range',c:'text-slate-300'},
+      {t:'12:03:18',msg:'EX-2: Track slip warning — reducing speed',c:'text-amber-400'},
+      {t:'12:01:55',msg:'GN-3: Fuel level 42% — refuel scheduled',c:'text-slate-300'},
+      {t:'11:58:40',msg:'SNS-B12: Temperature spike in Zone B storage — resolved',c:'text-emerald-400'},
+      {t:'11:55:10',msg:'TC-1: Maintenance window reminder — Jun 14',c:'text-blue-400'},
+    ]
+    document.getElementById('telemetryLog').innerHTML = `<p class="text-xs font-bold text-blue-400 mb-2">▶ ASSET TELEMETRY STREAM</p>` +
+      telemetry.map(t=>`<p class="font-mono text-xs ${t.c}"><span class="text-slate-600 mr-3">${t.t}</span>${t.msg}</p>`).join('')
+  </script>
+</body>
+</html>
