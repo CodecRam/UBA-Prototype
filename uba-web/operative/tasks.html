@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>UBA — My Tasks</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body class="font-sans min-h-screen bg-slate-50 pb-24">
+  <header class="bg-gradient-to-r from-blue-700 to-blue-800 text-white px-5 py-5">
+    <div class="max-w-2xl mx-auto">
+      <h1 class="text-xl font-bold">Assigned Tasks</h1>
+      <p class="text-blue-300 text-sm mt-0.5">Your active work assignments</p>
+    </div>
+  </header>
+
+  <div class="px-4 py-5 space-y-4 max-w-2xl mx-auto">
+    <!-- Stats -->
+    <div class="grid grid-cols-3 gap-3" id="statsRow"></div>
+    <!-- Tasks -->
+    <div id="taskList" class="space-y-4"></div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-2xl z-50">
+    <div class="flex max-w-2xl mx-auto">
+      <a href="dashboard.html" class="flex-1 flex flex-col items-center gap-1 py-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="text-xs font-semibold text-slate-400">Home</span></a>
+      <a href="tasks.html" class="flex-1 flex flex-col items-center gap-1 py-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span class="text-xs font-semibold text-blue-600">Tasks</span><span class="w-8 h-0.5 bg-blue-600 rounded-full"></span></a>
+      <a href="incidents.html" class="flex-1 flex flex-col items-center gap-1 py-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg><span class="text-xs font-semibold text-slate-400">Incidents</span></a>
+      <a href="knowledge.html" class="flex-1 flex flex-col items-center gap-1 py-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span class="text-xs font-semibold text-slate-400">Knowledge</span></a>
+      <a href="profile.html" class="flex-1 flex flex-col items-center gap-1 py-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="text-xs font-semibold text-slate-400">Profile</span></a>
+    </div>
+  </nav>
+
+  <script>
+    const tasks = [
+      { id:'T-001', title:'HVAC Duct Inspection — Section 3B', zone:'Zone B · Floor 3', status:'In Progress', priority:'High', due:'Today 14:00' },
+      { id:'T-002', title:'Conduit Cable Routing — East Wing',  zone:'Zone A · Basement', status:'To-Do', priority:'Medium', due:'Jun 8' },
+      { id:'T-003', title:'Scaffolding Structural Check',       zone:'Zone C · Exterior', status:'Completed', priority:'Low', due:'Jun 5' },
+      { id:'T-004', title:'Emergency Generator Test',           zone:'Zone D · Plant Room', status:'To-Do', priority:'High', due:'Jun 9' },
+    ]
+
+    const statusStyle = {
+      'To-Do': 'bg-slate-100 text-slate-700 border-slate-300',
+      'In Progress': 'bg-blue-100 text-blue-700 border-blue-300',
+      'Completed': 'bg-emerald-100 text-emerald-700 border-emerald-300',
+    }
+    const priorityStyle = {
+      'High': 'bg-rose-100 text-rose-700 border-rose-300',
+      'Medium': 'bg-amber-100 text-amber-700 border-amber-300',
+      'Low': 'bg-slate-100 text-slate-600 border-slate-300',
+    }
+
+    function renderStats() {
+      const total = tasks.length
+      const ip = tasks.filter(t=>t.status==='In Progress').length
+      const done = tasks.filter(t=>t.status==='Completed').length
+      document.getElementById('statsRow').innerHTML = [
+        {l:'Total',v:total,c:'text-slate-700',bg:'bg-white'},
+        {l:'In Progress',v:ip,c:'text-blue-700',bg:'bg-blue-50'},
+        {l:'Completed',v:done,c:'text-emerald-700',bg:'bg-emerald-50'},
+      ].map(s=>`<div class="${s.bg} rounded-2xl p-4 border border-slate-200 text-center shadow-sm"><p class="text-2xl font-bold ${s.c}">${s.v}</p><p class="text-xs text-slate-500 font-medium mt-0.5">${s.l}</p></div>`).join('')
+    }
+
+    function renderTasks() {
+      document.getElementById('taskList').innerHTML = tasks.map((t,i) => `
+        <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-6 hover:shadow-xl transition-all">
+          <div class="flex items-start justify-between gap-3 mb-4">
+            <div>
+              <p class="text-xs font-mono text-slate-400 mb-1">${t.id}</p>
+              <h3 class="font-bold text-slate-900 leading-snug">${t.title}</h3>
+            </div>
+            <span class="shrink-0 px-2.5 py-1 rounded-full text-xs font-bold border ${priorityStyle[t.priority]}">${t.priority}</span>
+          </div>
+          <div class="flex flex-wrap gap-3 mb-4 text-xs text-slate-500">
+            <span>📍 ${t.zone}</span>
+            <span>🕐 Due: ${t.due}</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <select onchange="updateStatus(${i},this.value)" class="text-xs font-bold px-3 py-1.5 rounded-lg border cursor-pointer focus:outline-none ${statusStyle[t.status]}">
+              ${['To-Do','In Progress','Completed'].map(s=>`<option value="${s}" ${s===t.status?'selected':''}>${s}</option>`).join('')}
+            </select>
+            <button class="text-blue-600 hover:text-blue-800 transition text-xs font-semibold">View Details →</button>
+          </div>
+        </div>`).join('')
+    }
+
+    function updateStatus(i, val) {
+      tasks[i].status = val
+      renderStats()
+      renderTasks()
+    }
+
+    renderStats()
+    renderTasks()
+  </script>
+</body>
+</html>

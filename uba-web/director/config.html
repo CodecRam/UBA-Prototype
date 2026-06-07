@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>UBA — Project Configuration</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="../assets/style.css"/></head>
+<body class="font-sans min-h-screen flex flex-col">
+  <header class="h-16 bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50">
+    <div class="max-w-[1440px] mx-auto px-6 h-full flex items-center justify-between gap-6">
+      <div class="flex items-center gap-3 shrink-0"><div class="w-9 h-9 bg-cyan-700 rounded-lg flex items-center justify-center shadow"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></div><span class="text-lg font-bold text-slate-900 tracking-tight">UBA</span></div>
+      <div class="flex items-center gap-2.5 px-3 shrink-0"><div class="w-9 h-9 rounded-full bg-blue-700 flex items-center justify-center text-white text-sm font-bold">PS</div><div class="hidden md:block"><p class="text-sm font-semibold text-slate-900">Dr. Priya Sharma</p><p class="text-xs text-slate-500">Operations Director</p></div><a href="../index.html" class="ml-2 text-xs text-rose-600 font-bold hover:underline">Sign Out</a></div>
+    </div>
+  </header>
+  <div class="flex flex-1">
+    <aside class="w-60 shrink-0 bg-slate-900 min-h-[calc(100vh-4rem)] flex flex-col">
+      <nav class="flex-1 px-3 py-4 space-y-1">
+        <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white">📊 Command Centre</a>
+        <a href="config.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium bg-blue-600 text-white shadow-lg">⚙️ Project Config</a>
+        <a href="financial.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white">📈 Financial Reports</a>
+        <a href="digital-twin.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white">📦 Digital Twin</a>
+      </nav>
+      <div class="px-3 pb-4"><div class="border-t border-slate-800 pt-3"><p class="text-xs text-slate-600 text-center">UBA Ops v1.0</p></div></div>
+    </aside>
+    <main class="flex-1 bg-slate-50 p-8 overflow-y-auto">
+      <div class="max-w-5xl mx-auto space-y-8">
+        <div><h1 class="text-3xl font-bold text-slate-900">Project Configuration</h1><p class="text-slate-500 mt-1">Manage project manifest, zone settings, and platform integrations</p></div>
+
+        <!-- Project Manifest Upload -->
+        <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-7">
+          <h2 class="font-bold text-slate-900 text-lg mb-5">📄 Project Manifest</h2>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+              <div id="dropZone" ondragover="event.preventDefault();this.classList.add('border-blue-500','bg-blue-50')" ondragleave="this.classList.remove('border-blue-500','bg-blue-50')" ondrop="handleDrop(event)" class="border-2 border-dashed border-slate-300 rounded-2xl p-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition" onclick="document.getElementById('manifestFile').click()">
+                <div class="text-4xl mb-3">📁</div>
+                <p class="font-semibold text-slate-700">Drop BIM/IFC file here</p>
+                <p class="text-xs text-slate-400 mt-1">Supports .ifc, .rvt, .nwd, .json</p>
+                <input type="file" id="manifestFile" class="hidden" onchange="handleFileSelect(this)"/>
+              </div>
+              <div id="uploadStatus" class="mt-3 hidden">
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                  <p class="text-sm font-semibold text-blue-800" id="fileName"></p>
+                  <div class="mt-2 bg-blue-200 rounded-full h-2"><div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-500" style="width:0%"></div></div>
+                  <p class="text-xs text-blue-600 mt-1" id="uploadMsg">Processing…</p>
+                </div>
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
+                <p class="text-xs font-bold text-emerald-600 mb-1">ACTIVE MANIFEST</p>
+                <p class="font-bold text-slate-900">NX-Tower-Complex-v4.2.ifc</p>
+                <p class="text-xs text-slate-500 mt-0.5">Uploaded Jun 1, 2026 · 84.7 MB · 2,341 elements</p>
+              </div>
+              <div class="grid grid-cols-2 gap-3" id="manifestStats"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Zone Configuration -->
+        <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-7">
+          <div class="flex items-center justify-between mb-5">
+            <h2 class="font-bold text-slate-900 text-lg">🗺️ Zone Configuration</h2>
+            <button onclick="addZone()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition">+ Add Zone</button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead><tr class="bg-slate-50 border-b border-slate-200"><th class="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">Zone ID</th><th class="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">Name</th><th class="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">Type</th><th class="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">Supervisor</th><th class="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">Operatives</th><th class="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">Status</th><th class="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">Action</th></tr></thead>
+              <tbody id="zoneTable"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Integration Settings -->
+        <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-7">
+          <h2 class="font-bold text-slate-900 text-lg mb-5">🔌 Platform Integration Settings</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="integrationGrid"></div>
+        </div>
+
+        <!-- Notification Rules -->
+        <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-7">
+          <h2 class="font-bold text-slate-900 text-lg mb-5">🔔 Notification Rules</h2>
+          <div class="space-y-3" id="notifRules"></div>
+          <button onclick="saveNotifications()" class="mt-5 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-xl transition text-sm">Save Notification Preferences</button>
+          <div id="saveMsg" class="hidden mt-3 text-sm text-emerald-600 font-semibold">✓ Preferences saved successfully</div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+    document.getElementById('manifestStats').innerHTML = [{l:'Total Zones',v:'8'},{l:'Floor Levels',v:'24'},{l:'BIM Elements',v:'2,341'},{l:'Last Sync',v:'2 hrs ago'}].map(s=>`<div class="bg-slate-50 rounded-xl p-3 border border-slate-100"><p class="text-xs text-slate-500">${s.l}</p><p class="font-bold text-slate-900">${s.v}</p></div>`).join('')
+    // Zone data
+    const zones = [
+      {id:'ZN-01',name:'Zone A — Foundation',type:'Civil',sup:'Jamie Smith',ops:8,status:'Active'},
+      {id:'ZN-02',name:'Zone B — MEP Services',type:'MEP',sup:'Alex Rivera',ops:12,status:'Active'},
+      {id:'ZN-03',name:'Zone C — Roofing',type:'Structural',sup:'Sam Chen',ops:5,status:'Active'},
+      {id:'ZN-04',name:'Zone D — Electrical',type:'MEP',sup:'Morgan Lee',ops:7,status:'Active'},
+      {id:'ZN-05',name:'Zone E — Facade',type:'Envelope',sup:'TBD',ops:0,status:'Pending'},
+    ]
+
+    function renderZones() {
+      document.getElementById('zoneTable').innerHTML = zones.map((z,i)=>`
+        <tr class="border-b border-slate-100 hover:bg-slate-50 transition ${i%2?'bg-slate-50/50':''}">
+          <td class="px-4 py-3 font-mono text-xs text-slate-500">${z.id}</td>
+          <td class="px-4 py-3 text-sm font-semibold text-slate-900">${z.name}</td>
+          <td class="px-4 py-3"><span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">${z.type}</span></td>
+          <td class="px-4 py-3 text-sm text-slate-600">${z.sup}</td>
+          <td class="px-4 py-3 text-sm text-slate-700 font-medium">${z.ops}</td>
+          <td class="px-4 py-3"><span class="px-2.5 py-1 rounded-full text-xs font-bold ${z.status==='Active'?'bg-emerald-100 text-emerald-700':'bg-amber-100 text-amber-700'}">${z.status}</span></td>
+          <td class="px-4 py-3"><button class="text-blue-600 hover:text-blue-800 text-xs font-semibold">Edit</button></td>
+        </tr>`).join('')
+    }
+
+    function addZone() {
+      zones.push({id:`ZN-0${zones.length+1}`,name:`Zone ${String.fromCharCode(64+zones.length+1)} — New Zone`,type:'TBD',sup:'Unassigned',ops:0,status:'Pending'})
+      renderZones()
+    }
+
+    // Integrations
+    const integrations = [
+      {name:'SAP FICO',desc:'Financial & Cost Management',icon:'💼',connected:true},
+      {name:'BIM 360',desc:'Design Collaboration',icon:'🏗️',connected:true},
+      {name:'IoT Sensor Hub',desc:'Asset Telemetry Data Feed',icon:'📡',connected:true},
+      {name:'Oracle P6',desc:'Project Scheduling Engine',icon:'📅',connected:false},
+      {name:'DocuSign',desc:'Digital Contract Signing',icon:'✍️',connected:true},
+      {name:'Weather API',desc:'Live Site Condition Feed',icon:'🌤️',connected:false},
+    ]
+    document.getElementById('integrationGrid').innerHTML = integrations.map(i=>`
+      <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+        <div class="w-11 h-11 bg-white rounded-xl flex items-center justify-center text-2xl shadow-sm border border-slate-100">${i.icon}</div>
+        <div class="flex-1"><p class="font-semibold text-slate-900 text-sm">${i.name}</p><p class="text-xs text-slate-500">${i.desc}</p></div>
+        <span class="px-2.5 py-1 rounded-full text-xs font-bold ${i.connected?'bg-emerald-100 text-emerald-700':'bg-slate-100 text-slate-500'}">${i.connected?'Connected':'Disconnected'}</span>
+      </div>`).join('')
+
+    // Notification rules
+    const notifs = [
+      {label:'Milestone sign-off required',enabled:true},
+      {label:'Design clash detected in Digital Twin',enabled:true},
+      {label:'Supplier delivery delay > 24 hours',enabled:true},
+      {label:'Operative access revoked',enabled:false},
+      {label:'Budget variance exceeds 5%',enabled:true},
+      {label:'Incident escalated to Operations Director',enabled:true},
+    ]
+    document.getElementById('notifRules').innerHTML = notifs.map((n,i)=>`
+      <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
+        <p class="text-sm text-slate-700">${n.label}</p>
+        <button onclick="toggleNotif(${i})" id="notifToggle${i}" class="relative inline-flex h-6 w-12 items-center rounded-full transition-colors ${n.enabled?'bg-blue-600':'bg-slate-300'}">
+          <span id="notifThumb${i}" class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${n.enabled?'translate-x-7':'translate-x-1'}"></span>
+        </button>
+      </div>`).join('')
+
+    function toggleNotif(i) {
+      notifs[i].enabled = !notifs[i].enabled
+      const btn = document.getElementById(`notifToggle${i}`)
+      const thumb = document.getElementById(`notifThumb${i}`)
+      btn.className = `relative inline-flex h-6 w-12 items-center rounded-full transition-colors ${notifs[i].enabled?'bg-blue-600':'bg-slate-300'}`
+      thumb.className = `inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${notifs[i].enabled?'translate-x-7':'translate-x-1'}`
+    }
+
+    function saveNotifications() {
+      const msg = document.getElementById('saveMsg')
+      msg.classList.remove('hidden')
+      setTimeout(()=>msg.classList.add('hidden'),3000)
+    }
+
+    function handleFileSelect(input) {
+      if(input.files[0]) processFile(input.files[0])
+    }
+    function handleDrop(e) {
+      e.preventDefault()
+      document.getElementById('dropZone').classList.remove('border-blue-500','bg-blue-50')
+      if(e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0])
+    }
+    function processFile(file) {
+      const status = document.getElementById('uploadStatus')
+      const bar = document.getElementById('progressBar')
+      const msg = document.getElementById('uploadMsg')
+      document.getElementById('fileName').textContent = file.name
+      status.classList.remove('hidden')
+      let w = 0
+      const t = setInterval(()=>{
+        w = Math.min(w+Math.random()*15,100)
+        bar.style.width = w+'%'
+        if(w<30) msg.textContent = 'Parsing BIM elements…'
+        else if(w<60) msg.textContent = 'Validating zone topology…'
+        else if(w<90) msg.textContent = 'Syncing to Digital Twin…'
+        else { msg.textContent = '✓ Manifest uploaded and activated'; clearInterval(t) }
+      },200)
+    }
+
+    renderZones()
+  </script>
+</body>
+</html>

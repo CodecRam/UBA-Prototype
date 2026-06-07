@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UBA — Urban Build AI Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/style.css" />
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { sans: ['Inter','sans-serif'] } } }
+    }
+  </script>
+</head>
+<body class="font-sans min-h-screen bg-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
+
+  <!-- Background grid overlay -->
+  <div class="absolute inset-0 opacity-10"
+    style="background-image: radial-gradient(circle, #93c5fd 1px, transparent 1px); background-size: 40px 40px;"></div>
+  <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-uba-950/50 to-slate-900"></div>
+
+  <div class="relative w-full max-w-md z-10">
+    <!-- Logo -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl shadow-2xl mb-4"
+        style="background: linear-gradient(135deg,#1e3a8a,#1e40af);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/>
+          <line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/>
+        </svg>
+      </div>
+      <h1 class="text-5xl font-extrabold text-white tracking-tight">UBA</h1>
+      <p class="text-blue-300 mt-2 text-base font-medium">Urban Build AI Platform</p>
+    </div>
+
+    <!-- Card -->
+    <div class="rounded-3xl shadow-2xl p-8 border border-white/10"
+      style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px);">
+      <div class="flex items-center gap-2 mb-6">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <h2 class="text-lg font-bold text-white">Secure Access Portal</h2>
+      </div>
+
+      <form onsubmit="handleLogin(event)" class="space-y-4">
+        <!-- Email -->
+        <div>
+          <label class="block text-sm font-semibold text-blue-200 mb-1.5">Email Address</label>
+          <div class="relative">
+            <svg class="absolute left-4 top-1/2 -translate-y-1/2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <input type="email" placeholder="operator@uba-ops.com"
+              class="w-full pl-11 pr-4 py-3.5 rounded-xl text-sm text-white placeholder-uba-400 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              style="background:rgba(255,255,255,0.08)" />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label class="block text-sm font-semibold text-blue-200 mb-1.5">Password</label>
+          <div class="relative">
+            <svg class="absolute left-4 top-1/2 -translate-y-1/2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" placeholder="Enter your password"
+              class="w-full pl-11 pr-4 py-3.5 rounded-xl text-sm text-white placeholder-uba-400 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              style="background:rgba(255,255,255,0.08)" />
+          </div>
+        </div>
+
+        <!-- Role -->
+        <div>
+          <label class="block text-sm font-semibold text-blue-200 mb-1.5">
+            Select Role <span class="text-blue-400 font-normal">(Demo Mode)</span>
+          </label>
+          <div class="relative">
+            <svg class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            <select id="roleSelect"
+              class="w-full px-4 py-3.5 rounded-xl text-sm font-medium text-white border border-white/20 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 transition cursor-pointer"
+              style="background:rgba(255,255,255,0.08)">
+              <option value="" style="background:#1e293b;color:white">— Choose Your Role —</option>
+              <option value="operative/dashboard.html"        style="background:#1e293b;color:white">Site Worker</option>
+              <option value="supervisor/dashboard.html"       style="background:#1e293b;color:white">Site Supervisor</option>
+              <option value="project-manager/dashboard.html"  style="background:#1e293b;color:white">Project Manager</option>
+              <option value="coordinator/dashboard.html"      style="background:#1e293b;color:white">Logistics Coordinator</option>
+              <option value="auditor/dashboard.html"          style="background:#1e293b;color:white">Safety Officer</option>
+              <option value="admin/dashboard.html"            style="background:#1e293b;color:white">UBA Administrator</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit"
+          class="w-full mt-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl text-base flex items-center justify-center gap-2 transition-all shadow-lg"
+          id="loginBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          Authenticate &amp; Enter
+        </button>
+      </form>
+
+      <p class="text-center text-xs text-blue-400 mt-5">
+        New operator? <a href="register.html" class="text-blue-300 font-semibold hover:text-white transition">Register Identity Token</a>
+      </p>
+    </div>
+
+    <p class="text-center text-xs text-slate-600 mt-4">Demo: Select any role to explore the full operations platform</p>
+  </div>
+
+  <script>
+    function handleLogin(e) {
+      e.preventDefault()
+      const role = document.getElementById('roleSelect').value
+      if (!role) { alert('Please select a role to continue.'); return; }
+      const btn = document.getElementById('loginBtn')
+      btn.innerHTML = '<svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="white" stroke-width="4"/><path class="opacity-75" fill="white" d="M4 12a8 8 0 018-8v8z"/></svg> Authenticating...'
+      btn.disabled = true
+      setTimeout(() => { window.location.href = role }, 900)
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>UBA — API Integrations</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="../assets/style.css"/></head>
+<body class="font-sans min-h-screen flex flex-col">
+  <header class="h-16 bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50">
+    <div class="max-w-[1440px] mx-auto px-6 h-full flex items-center justify-between gap-6">
+      <div class="flex items-center gap-3 shrink-0"><div class="w-9 h-9 bg-cyan-700 rounded-lg flex items-center justify-center shadow"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></div><span class="text-lg font-bold text-slate-900 tracking-tight">UBA</span></div>
+      <div class="flex items-center gap-2.5 px-3 shrink-0"><div class="w-9 h-9 rounded-full bg-slate-700 flex items-center justify-center text-white text-sm font-bold">AO</div><div class="hidden md:block"><p class="text-sm font-semibold text-slate-900">Admin Override</p><p class="text-xs text-slate-500">Platform Administrator</p></div><a href="../index.html" class="ml-2 text-xs text-rose-600 font-bold hover:underline">Sign Out</a></div>
+    </div>
+  </header>
+  <div class="flex flex-1">
+    <aside class="w-60 shrink-0 bg-slate-900 min-h-[calc(100vh-4rem)] flex flex-col">
+      <nav class="flex-1 px-3 py-4 space-y-1">
+        <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white">⚡ System Health</a>
+        <a href="rbac.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white">🔐 RBAC Matrix</a>
+        <a href="integrations.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium bg-blue-600 text-white shadow-lg">🔌 Integrations</a>
+        <a href="logs.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white">📜 Audit Logs</a>
+      </nav>
+      <div class="px-3 pb-4"><div class="border-t border-slate-800 pt-3"><p class="text-xs text-slate-600 text-center">UBA Ops v1.0</p></div></div>
+    </aside>
+    <main class="flex-1 bg-slate-50 p-8 overflow-y-auto">
+      <div class="max-w-6xl mx-auto space-y-8">
+        <div><h1 class="text-3xl font-bold text-slate-900">API Integrations</h1><p class="text-slate-500 mt-1">Manage third-party platform connections, credentials, and webhook configurations</p></div>
+
+        <!-- Status summary -->
+        <div class="grid grid-cols-3 gap-5" id="integrationStats"></div>
+
+        <!-- Integration Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="integrationCards"></div>
+
+        <!-- Webhook config -->
+        <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-7">
+          <h2 class="font-bold text-slate-900 text-lg mb-5">🔗 Webhook Configuration</h2>
+          <div class="space-y-4" id="webhooks"></div>
+          <button onclick="addWebhook()" class="mt-4 text-blue-600 hover:text-blue-800 text-sm font-bold border border-blue-200 hover:border-blue-400 px-4 py-2 rounded-xl transition">+ Add Webhook Endpoint</button>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+    document.getElementById('integrationStats').innerHTML = [
+      {l:'Connected',v:'4',c:'text-emerald-700',bg:'bg-emerald-50'},
+      {l:'Disconnected',v:'2',c:'text-amber-700',bg:'bg-amber-50'},
+      {l:'Total Endpoints',v:'24',c:'text-slate-900',bg:'bg-white'},
+    ].map(s=>`<div class="${s.bg} rounded-2xl border border-slate-200 shadow-sm p-5 text-center"><p class="text-3xl font-extrabold ${s.c}">${s.v}</p><p class="text-sm text-slate-500 font-medium mt-1">${s.l}</p></div>`).join('')
+
+    const integrations = [
+      {name:'SAP FICO',desc:'Financial cost management & invoice processing',icon:'💼',status:'Connected',latency:'210ms',calls:'1,842 calls today',lastSync:'2 min ago',env:'Production'},
+      {name:'Autodesk BIM 360',desc:'BIM design collaboration & model synchronisation',icon:'🏗️',status:'Connected',latency:'98ms',calls:'342 calls today',lastSync:'4 min ago',env:'Production'},
+      {name:'UBA IoT Hub',desc:'Asset telemetry, sensors, and GPS tracking',icon:'📡',status:'Connected',latency:'45ms',calls:'48,201 events today',lastSync:'Live',env:'Production'},
+      {name:'DocuSign',desc:'Digital contract and milestone sign-off',icon:'✍️',status:'Connected',latency:'180ms',calls:'14 calls today',lastSync:'22 min ago',env:'Production'},
+      {name:'Oracle Primavera P6',desc:'Enterprise project scheduling engine',icon:'📅',status:'Disconnected',latency:'—',calls:'—',lastSync:'Jun 1, 2026',env:'Staging'},
+      {name:'OpenWeather API',desc:'Live weather & site condition feed',icon:'🌤️',status:'Disconnected',latency:'—',calls:'—',lastSync:'Never',env:'Dev'},
+    ]
+
+    let testingIdx = null
+    document.getElementById('integrationCards').innerHTML = integrations.map((api,i)=>`
+      <div class="bg-white rounded-2xl border ${api.status==='Connected'?'border-slate-200':'border-amber-200'} shadow-sm overflow-hidden">
+        <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 bg-slate-50 rounded-xl flex items-center justify-center text-2xl border border-slate-100">${api.icon}</div>
+            <div><p class="font-bold text-slate-900">${api.name}</p><p class="text-xs text-slate-500">${api.env}</p></div>
+          </div>
+          <span class="px-2.5 py-1 rounded-full text-xs font-bold ${api.status==='Connected'?'bg-emerald-100 text-emerald-700':'bg-amber-100 text-amber-700'}">${api.status}</span>
+        </div>
+        <div class="p-5">
+          <p class="text-sm text-slate-600 mb-4">${api.desc}</p>
+          <div class="grid grid-cols-3 gap-3 mb-4">
+            ${[{l:'Latency',v:api.latency},{l:'API Calls',v:api.calls},{l:'Last Sync',v:api.lastSync}].map(s=>`<div class="bg-slate-50 rounded-lg p-2.5"><p class="text-xs text-slate-400">${s.l}</p><p class="text-xs font-bold text-slate-800">${s.v}</p></div>`).join('')}
+          </div>
+          <div class="flex gap-2">
+            <button onclick="testConnection(${i},this)" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 rounded-lg transition">Test Connection</button>
+            <button class="px-3 py-2 border border-slate-200 hover:border-slate-400 rounded-lg text-xs text-slate-600 hover:text-slate-900 transition">${api.status==='Connected'?'⚙️ Config':'🔌 Connect'}</button>
+          </div>
+          <div id="testLog${i}" class="mt-3"></div>
+        </div>
+      </div>`).join('')
+
+    function testConnection(i, btn) {
+      const api = integrations[i]
+      const log = document.getElementById(`testLog${i}`)
+      btn.textContent = 'Testing…'
+      btn.disabled = true
+      const ok = api.status === 'Connected'
+      setTimeout(()=>{
+        log.innerHTML = ok
+          ? `<p class="text-xs font-bold text-emerald-600">✓ Connection verified — ${api.latency} avg. latency</p>`
+          : `<p class="text-xs font-bold text-rose-600">✗ Connection failed — check credentials</p>`
+        btn.textContent = 'Test Connection'
+        btn.disabled = false
+      }, 1500)
+    }
+
+    const webhooks = [
+      {url:'/api/uba/milestone-signoff','event':'milestone.signoff','active':true},
+      {url:'/api/uba/incident-escalated','event':'incident.escalated','active':true},
+      {url:'/api/uba/delivery-update','event':'delivery.status_change','active':false},
+    ]
+    function renderWebhooks() {
+      document.getElementById('webhooks').innerHTML = webhooks.map((w,i)=>`
+        <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
+          <div class="flex-1 min-w-0">
+            <p class="font-mono text-xs text-slate-500">${w.url}</p>
+            <p class="text-xs text-slate-400 mt-0.5">Event: <span class="font-bold text-blue-700">${w.event}</span></p>
+          </div>
+          <button onclick="toggleWebhook(${i})" class="relative inline-flex h-6 w-12 items-center rounded-full transition-colors shrink-0 ${w.active?'bg-blue-600':'bg-slate-300'}">
+            <span class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${w.active?'translate-x-7':'translate-x-1'}"></span>
+          </button>
+        </div>`).join('')
+    }
+    function toggleWebhook(i) { webhooks[i].active=!webhooks[i].active; renderWebhooks() }
+    function addWebhook() {
+      webhooks.push({url:'/api/uba/new-endpoint',event:'custom.event',active:false})
+      renderWebhooks()
+    }
+    renderWebhooks()
+  </script>
+</body>
+</html>
